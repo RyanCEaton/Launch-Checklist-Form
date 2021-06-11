@@ -1,22 +1,52 @@
 // Write your JavaScript code here!
 window.addEventListener("load", function() {
+   
    let form = document.querySelector("form");
+   let pilotNameInput = document.querySelector("input[name=pilotName]");
+   let copilotNameInput = document.querySelector("input[name=copilotName]");
+   let fuelLevelInput = document.querySelector("input[name=fuelLevel]");
+   let cargoMassInput = document.querySelector("input[name=cargoMass]");
    form.addEventListener("submit", function(event) {
-      // alert("submit");
-      let pilotNameInput = document.querySelector("input[name=pilotName]");
-      let copilotNameInput = document.querySelector("input[name=copilotName]");
-      let fuelLevelInput = document.querySelector("input[name=fuelLevel]");
-      let cargoMassInput = document.querySelector("input[name=cargoMass]");
-      // alert("pilotname: " + pilotNameInput.value);
-      console.log(isNaN(cargoMassInput.value));
-      if (pilotNameInput.value === "" || isNaN(Number(pilotNameInput.value)) === false || copilotNameInput.value === "" || isNaN(Number(copilotNameInput.value)) === false || fuelLevelInput.value === "" || isNaN(fuelLevelInput.value) === true || cargoMassInput.value === "" || isNaN(Number(cargoMassInput.value)) === true) {
-         alert("All fields are required! and must correspond to the correct type");
-         // stop the form submission
-         event.preventDefault();}
-         else {alert("submitted successfully ")};
+     event.preventDefault();
       
+      if (pilotNameInput.value === "" || copilotNameInput.value === "" || fuelLevelInput.value === "" || cargoMassInput.value === "") {
+         alert("All fields are required!");
+         event.preventDefault();
+      }
+      else if (isNaN(Number(pilotNameInput.value)) === false || isNaN(Number(copilotNameInput.value)) === false || isNaN(fuelLevelInput.value) === true |isNaN(Number(cargoMassInput.value)) === true) {   
+         alert("Make sure to enter valid information for each field!");
+         event.preventDefault();
+      }
+      else {
+         document.getElementById("pilotStatus").innerHTML = `Pilot ${pilotNameInput.value} is ready for launch`;
+         document.getElementById("copilotStatus").innerHTML = `Co-Pilot ${copilotNameInput.value} is ready for launch`;
+         if (fuelLevelInput.value < 10000 && cargoMassInput.value < 10000) {
+            document.getElementById("faultyItems").style.visibility = "visible"; 
+            document.getElementById("fuelStatus").innerHTML = "Not enough fuel for the journey.";
+            document.getElementById("launchStatus").innerHTML = "<span style='color: red'>Shuttle not ready for launch</span>";
+         }
+         else if (fuelLevelInput.value > 10000 && cargoMassInput.value > 10000) {
+            document.getElementById("faultyItems").style.visibility = "visible"; 
+            document.getElementById("cargoStatus").innerHTML = "There is too much mass for the shuttle to take off";
+            document.getElementById("launchStatus").innerHTML = "<span style='color: red'>Shuttle not ready for launch</span>";
+         }
+         else if (fuelLevelInput.value < 10000 && cargoMassInput > 10000) {
+            document.getElementById("faultyItems").style.visibility = "visible"; 
+            document.getElementById("fuelStatus").innerHTML = "Not enough fuel for the journey.";
+            document.getElementById("cargoStatus").innerHTML = "There is too much mass for the shuttle to take off";
+            document.getElementById("launchStatus").innerHTML = "<span style='color: red'>Shuttle not ready for launch</span>";
+         }
+         else {
+         document.getElementById("faultyItems").style.visibility = "visible";   
+         document.getElementById("launchStatus").innerHTML = "<span style='color: green'>Shuttle ready for launch</span>";
+         }
+      };
+      
+      fetch("https://handlers.education.launchcode.org/static/planets.json").then(response => response.json()).then(json => console.log(json));
    });
+   
 });
+
 /* This block of code shows how to format the HTML once you fetch some planetary JSON!
 <h2>Mission Destination</h2>
 <ol>
