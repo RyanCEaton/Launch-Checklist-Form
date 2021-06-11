@@ -1,6 +1,22 @@
 // Write your JavaScript code here!
 window.addEventListener("load", function() {
    
+   fetch("https://handlers.education.launchcode.org/static/planets.json").then(response => response.json()).then(json => {
+      const div = document.getElementById("missionTarget");
+      console.log(json.length);
+      let randomPlanet =  Math.floor(Math.random()*6+1);
+      div.innerHTML = `
+      <ol>
+          <li>Name: ${json[randomPlanet].name}</li>
+          <li>Diameter: ${json[randomPlanet].diameter}</li>
+          <li>Star: ${json[randomPlanet].star}</li>
+          <li>Distance from Earth: ${json[randomPlanet].distance}</li>
+          <li>Number of Moons: ${json[randomPlanet].moons}</li>
+      </ol>
+      <img src="${json[randomPlanet].image}">  
+      `;
+  });
+
    let form = document.querySelector("form");
    let pilotNameInput = document.querySelector("input[name=pilotName]");
    let copilotNameInput = document.querySelector("input[name=copilotName]");
@@ -41,10 +57,8 @@ window.addEventListener("load", function() {
          document.getElementById("launchStatus").innerHTML = "<span style='color: green'>Shuttle ready for launch</span>";
          }
       };
-      
-      fetch("https://handlers.education.launchcode.org/static/planets.json").then(response => response.json()).then(json => console.log(json));
+          
    });
-   
 });
 
 /* This block of code shows how to format the HTML once you fetch some planetary JSON!
